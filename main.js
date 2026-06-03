@@ -1,116 +1,77 @@
-// Banco de dados simulado para as máquinas
-const dadosMaquinas = {
-    "trator-01": {
-        velocidade: 6.5,
-        combustivel: 78,
-        temperatura: 85,
-        area: 42.3,
-        nome: "Trator John Deere 6115J"
-    },
-    "colheitadeira-01": {
-        velocidade: 4.2,
-        combustivel: 45,
-        temperatura: 92,
-        area: 18.7,
-        nome: "Colheitadeira Case IH 8250"
-    }
-};
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AgroTech - Telemetria Agrícola</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <aside class="sidebar">
+            <h2>Agro<span>Tech</span></h2>
+            <nav>
+                <ul>
+                    <li class="active"><a href="#">Dashboard</a></li>
+                    <li><a href="#">Frota</a></li>
+                    <li><a href="#">Histórico</a></li>
+                    <li><a href="#">Alertas</a></li>
+                </ul>
+            </nav>
+            <div class="status-geral">
+                <p>Status da Frota: <strong id="frota-status">100% Online</strong></p>
+            </div>
+        </aside>
 
-let maquinaAtiva = "trator-01";
+        <main class="main-content">
+            <header>
+                <h1>Painel de Telemetria em Tempo Real</h1>
+                <div class="maquina-selector">
+                    <label for="maquina">Selecionar Máquina: </label>
+                    <select id="maquina">
+                        <option value="trator-01">Trator John Deere 6115J (ID: #01)</option>
+                        <option value="colheitadeira-01">Colheitadeira Case IH 8250 (ID: #02)</option>
+                    </select>
+                </div>
+            </header>
 
-// Elementos do DOM
-const seletor = document.getElementById("maquina");
-const velVal = document.getElementById("vel-val");
-const combVal = document.getElementById("comb-val");
-const combProgress = document.getElementById("comb-progress");
-const tempVal = document.getElementById("temp-val");
-const tempStatus = document.getElementById("temp-status");
-const areaVal = document.getElementById("area-val");
-const logList = document.getElementById("log-list");
+            <section class="dashboard-grid">
+                <div class="card">
+                    <h3>Velocidade Atual</h3>
+                    <div class="value"><span id="vel-val">0.0</span> <small>km/h</small></div>
+                    <p class="card-footer">Velocidade ideal de plantio</p>
+                </div>
 
-// Atualiza a interface da tela com base na máquina selecionada
-function atualizarPainel() {
-    const dados = dadosMaquinas[maquinaAtiva];
+                <div class="card">
+                    <h3>Nível de Combustível</h3>
+                    <div class="value"><span id="comb-val">0</span> <small>%</small></div>
+                    <div class="progress-bar-container">
+                        <div id="comb-progress" class="progress-bar" style="width: 0%;"></div>
+                    </div>
+                    <p class="card-footer">Autonomia estimada</p>
+                </div>
 
-    velVal.innerText = dados.velocidade.toFixed(1);
-    combVal.innerText = Math.round(dados.combustivel);
-    combProgress.style.width = `${dados.combustivel}%`;
-    tempVal.innerText = Math.round(dados.temperatura);
-    areaVal.innerText = dados.area.toFixed(1);
+                <div class="card">
+                    <h3>Temp. do Motor</h3>
+                    <div class="value"><span id="temp-val">0</span> <small>°C</small></div>
+                    <p id="temp-status" class="card-footer">Verificando...</p>
+                </div>
 
-    // Lógica visual da temperatura do motor
-    if (dados.temperatura > 95) {
-        tempStatus.innerText = "Alerta: Alta Temperatura";
-        tempStatus.className = "card-footer status-danger";
-    } else if (dados.temperatura > 90) {
-        tempStatus.innerText = "Atenção";
-        tempStatus.className = "card-footer status-warning";
-    } else {
-        tempStatus.innerText = "Normal";
-        tempStatus.className = "card-footer status-ok";
-    }
-}
+                <div class="card">
+                    <h3>Área Trabalhada</h3>
+                    <div class="value"><span id="area-val">0.0</span> <small>ha</small></div>
+                    <p class="card-footer">Hectares cobertos na operação</p>
+                </div>
+            </section>
 
-// Simula a flutuação dos sensores em tempo real (Telemetria Viva)
-setInterval(() => {
-    const dados = dadosMaquinas[maquinaAtiva];
+            <section class="logs-container">
+                <h3>Histórico de Eventos Recentes (Campo)</h3>
+                <ul id="log-list">
+                    </ul>
+            </section>
+        </main>
+    </div>
 
-    // Simula pequenas variações de velocidade e temperatura
-    dados.velocidade += (Math.random() - 0.5) * 0.4;
-    if(dados.velocidade < 0) dados.velocidade = 0;
-
-    dados.temperatura += (Math.random() - 0.5) * 1.2;
-
-    // Consome combustível lentamente e aumenta área trabalhada
-    dados.combustivel -= 0.02;
-    if(dados.combustivel < 0) dados.combustivel = 0;
-    
-    dados.area += 0.005;
-
-    atualizarPainel();
-}, 2000); // Atualiza a cada 2 segundos
-
-// Adiciona logs aleatórios na tela para simular eventos do campo
-function adicionarLogAleatorio() {
-    const eventos = [
-        "Ajuste de rota efetuado pelo piloto automático.",
-        "Rendimento de colheita calculado em 65 sc/ha.",
-        "Sensor de umidade do grão: 14% (Ideal).",
-        "Sinal de telemetria oscilando levemente (Nuvem/Árvores)."
-    ];
-    
-    const eventoAleatorio = eventos[Math.floor(Math.random() * eventos.length)];
-    const agora = new Date();
-    const horaFormatada = agora.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
-
-    const novoItem = document.createElement("li");
-    novoItem.innerHTML = `<span class="time">[${horaFormatada}]</span> ${eventoAleatorio}`;
-    
-    // Insere no topo da lista de logs
-    logList.insertBefore(novoItem, logList.firstChild);
-
-    // Mantém apenas os 4 logs mais recentes na tela
-    if (logList.children.length > 4) {
-        logList.removeChild(logList.lastChild);
-    }
-}
-
-// Gera um novo evento de telemetria a cada 10 segundos
-setInterval(adicionarLogAleatorio, 10000);
-
-// Ouvinte para mudança de máquina no seletor
-seletor.addEventListener("change", (e) => {
-    maquinaAtiva = e.target.value;
-    
-    // Adiciona log de troca
-    const agora = new Date();
-    const horaFormatada = agora.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
-    const novoItem = document.createElement("li");
-    novoItem.innerHTML = `<span class="time">[${horaFormatada}]</span> Alternado para monitoramento da unidade: <strong>${dadosMaquinas[maquinaAtiva].nome}</strong>`;
-    logList.insertBefore(novoItem, logList.firstChild);
-
-    atualizarPainel();
-});
-
-// Inicialização padrão
-atualizarPainel();
+    <script src="script.js"></script>
+</body>
+</html>
