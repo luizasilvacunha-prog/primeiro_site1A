@@ -3,57 +3,63 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AgroTech - Telemetria Agrícola</title>
+    <title>Telemetria Agrícola - AgroTech</title>
     <link rel="stylesheet" href="style.css">
+    <script src="https://jsdelivr.net"></script>
 </head>
 <body>
     <div class="container">
+        <!-- Barra Lateral -->
         <aside class="sidebar">
-            <h2>Agro<span>Tech</span></h2>
+            <h2>AgroTech 🚜</h2>
             <nav>
                 <ul>
                     <li class="active"><a href="#">Dashboard</a></li>
                     <li><a href="#">Frota</a></li>
-                    <li><a href="#">Histórico</a></li>
                     <li><a href="#">Alertas</a></li>
+                    <li><a href="#">Relatórios</a></li>
                 </ul>
             </nav>
-            <div class="status-geral">
-                <p>Status da Frota: <strong id="frota-status">100% Online</strong></p>
-            </div>
         </aside>
 
+        <!-- Conteúdo Principal -->
         <main class="main-content">
             <header>
-                <h1>Painel de Telemetria em Tempo Real</h1>
-                <div class="maquina-selector">
-                    <label for="maquina">Selecionar Máquina: </label>
-                    <select id="maquina">
-                        <option value="trator-01">Trator John Deere 6115J (ID: #01)</option>
-                        <option value="colheitadeira-01">Colheitadeira Case IH 8250 (ID: #02)</option>
-                    </select>
-                </div>
+                <h1>Painel de Telemetria</h1>
+                <div class="status-geral">Status do Sistema: <span class="online">Online</span></div>
             </header>
 
-            <section class="dashboard-grid">
+            <!-- Cartões de Métricas -->
+            <section class="cards-grid">
                 <div class="card">
-                    <h3>Velocidade Atual</h3>
-                    <div class="value"><span id="vel-val">6.5</span> <small>km/h</small></div>
-                    <p class="card-footer">Velocidade ideal de plantio</p>
+                    <h3>Máquinas Ativas</h3>
+                    <p class="valor" id="maquinas-ativas">0/0</p>
                 </div>
-
                 <div class="card">
-                    <h3>Nível de Combustível</h3>
-                    <div class="value"><span id="comb-val">78</span> <small>%</small></div>
-                    <p class="card-footer">Autonomia de aprox. 12h</p>
+                    <h3>Consumo Médio</h3>
+                    <p class="valor" id="consumo-medio">0 L/h</p>
                 </div>
-
                 <div class="card">
-                    <h3>Temp. do Motor</h3>
-                    <div class="value"><span id="temp-val">85</span> <small>°C</small></div>
-                    <p class="card-footer">Temperatura operacional normal</p>
+                    <h3>Área Trabalhada</h3>
+                    <p class="valor" id="area-trabalhada">0 ha</p>
+                </div>
+            </section>
+
+            <!-- Seção de Gráficos e Alertas -->
+            <section class="data-section">
+                <div class="chart-container">
+                    <h3>Eficiência do Combustível por Máquina</h3>
+                    <canvas id="telemetryChart"></canvas>
+                </div>
+                <div class="alerts-container">
+                    <h3>Alertas em Tempo Real</h3>
+                    <ul id="alerts-list">
+                        <!-- Alertas inseridos via JS -->
+                    </ul>
                 </div>
             </section>
         </main>
-    </div> </body>
+    </div>
+    <script src="main.js"></script>
+</body>
 </html>
